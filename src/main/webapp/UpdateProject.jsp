@@ -58,7 +58,7 @@
 <body>
     <div class="container">
         <h1>Update Project</h1>
-        <form action="UpdateProject" method="post">
+        <form action="UpdateProject" method="post" enctype="multipart/form-data">
             <label for="projectId">Project ID</label>
             <input type="text" id="projectId" name="projectId" required>
             
@@ -83,6 +83,9 @@
             
             <label for="budget">Budget</label>
             <input type="number" step="0.01" id="budget" name="budget" required>
+
+            <label for="image">Project Image</label>
+            <input type="file" id="image" name="image">
             
             <button type="submit">Update Project</button>
         </form>

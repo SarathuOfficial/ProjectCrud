@@ -58,8 +58,7 @@
 <body>
     <div class="container">
         <h1>Create Project</h1>
-        <form action="CreateProject" method="post">
-
+        <form action="CreateProject" method="post" enctype="multipart/form-data">
             <label for="projectName">Project Name</label>
             <input type="text" id="projectName" name="projectName" required>
             
@@ -81,6 +80,9 @@
             
             <label for="budget">Budget</label>
             <input type="number" step="0.01" id="budget" name="budget" required>
+            
+            <label for="image">Project Image</label>
+            <input type="file" id="image" name="image">
             
             <button type="submit">Create Project</button>
         </form>

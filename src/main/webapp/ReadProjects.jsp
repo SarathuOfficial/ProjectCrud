@@ -56,6 +56,7 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Budget</th>
+                    <th>Image</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,13 +73,20 @@
                     <td><%= project[3] %></td>
                     <td><%= project[4] %></td>
                     <td><%= project[5] %></td>
+                    <td>
+                        <% if (project[6] != null) { %>
+                            <img src="<%= project[6] %>" alt="Project Image" width="100" height="100"/>
+                        <% } else { %>
+                            No Image
+                        <% } %>
+                    </td>
                 </tr>
                 <% 
                     }
                 } else {
                 %>
                 <tr>
-                    <td colspan="6">No projects available</td>
+                    <td colspan="7">No projects available</td>
                 </tr>
                 <% 
                 }
