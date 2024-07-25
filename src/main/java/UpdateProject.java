@@ -17,10 +17,12 @@ import javax.servlet.http.Part;
 public class UpdateProject extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPut(request, response);
     }
 
+    @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Retrieve parameters
         String projectId = request.getParameter("projectId");
@@ -32,36 +34,40 @@ public class UpdateProject extends HttpServlet {
         String budget = request.getParameter("budget");
 
         if (projectId == null || projectName == null || projectDescription == null || startDate == null || endDate == null || status == null || budget == null) {
+            response.setContentType("text/plain");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Missing parameters");
             return;
         }
 
         Part imagePart = request.getPart("image");
-        InputStream imageStream = imagePart != null ? imagePart.getInputStream() : null;
+        InputStream imageStream = imagePart != null && imagePart.getSize() > 0 ? imagePart.getInputStream() : null;
 
         try (Connection connection = DBConnection.getConnection()) {
             String sql = "UPDATE ProjectDetails SET projectName = ?, projectDescription = ?, startDate = ?, endDate = ?, status = ?, budget = ?, image = ? WHERE projectId = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, projectName);
-            statement.setString(2, projectDescription);
-            statement.setDate(3, java.sql.Date.valueOf(startDate));
-            statement.setDate(4, java.sql.Date.valueOf(endDate));
-            statement.setString(5, status);
-            statement.setBigDecimal(6, new BigDecimal(budget));
-            if (imageStream != null) {
-                statement.setBlob(7, imageStream);
-            } else {
-                statement.setNull(7, java.sql.Types.BLOB);
-            }
-            statement.setInt(8, Integer.parseInt(projectId));
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, projectName);
+                statement.setString(2, projectDescription);
+                statement.setDate(3, java.sql.Date.valueOf(startDate));
+                statement.setDate(4, java.sql.Date.valueOf(endDate));
+                statement.setString(5, status);
+                statement.setBigDecimal(6, new BigDecimal(budget));
+                if (imageStream != null) {
+                    statement.setBlob(7, imageStream);
+                } else {
+                    statement.setNull(7, java.sql.Types.BLOB);
+                }
+                statement.setInt(8, Integer.parseInt(projectId));
 
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated > 0) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("Project updated successfully");
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Project not found");
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    response.setContentType("text/plain");
+                    response.getWriter().write("Project updated successfully");
+                } else {
+                	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("Project ID does not exist");
+      
+                }
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

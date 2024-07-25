@@ -15,7 +15,7 @@ public class DeleteProject extends HttpServlet {
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String projectId = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        
+
         // Add your logic to delete the project from the database
         boolean deleteSuccess = deleteProjectFromDatabase(projectId);
 
@@ -23,8 +23,8 @@ public class DeleteProject extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("Project deleted successfully");
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Failed to delete project");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // Change to 400 Bad Request
+            response.getWriter().write("Error: Unable to delete project. Please check if the project ID is correct and try again.");
         }
     }
 
@@ -34,7 +34,6 @@ public class DeleteProject extends HttpServlet {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            
             stmt.setString(1, projectId);
 
             // Execute the delete statement
