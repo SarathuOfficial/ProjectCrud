@@ -167,7 +167,7 @@ img {
             tableBody.innerHTML = ''; // Clear existing rows
 
             data.forEach(project => {
-                console.log(project); // Debugging output to console
+
 
                 const row = document.createElement('tr');
 
