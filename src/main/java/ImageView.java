@@ -11,14 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @WebServlet("/image")
-public class ImageServlet extends HttpServlet {
+public class ImageView extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int projectID = Integer.parseInt(request.getParameter("id"));
         byte[] image = getImageByProjectID(projectID);
 
-        response.setContentType("image/jpeg");
         try (OutputStream out = response.getOutputStream()) {
             if (image != null) {
                 out.write(image);

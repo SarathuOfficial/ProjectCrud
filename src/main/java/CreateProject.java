@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebServlet("/CreateProject")
 @MultipartConfig
@@ -62,11 +64,15 @@ public class CreateProject extends HttpServlet {
                 statement.setNull(7, java.sql.Types.BLOB);
             }
             statement.executeUpdate();
+            
+            response.setStatus(HttpServletResponse.SC_OK);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
+            return;
         }
-
+        
         response.sendRedirect("index.jsp");
     }
+
 }

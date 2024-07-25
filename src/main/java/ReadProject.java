@@ -4,21 +4,42 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @WebServlet("/ReadProject")
 public class ReadProject extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
         List<String[]> projects = getAllProjects();
-        request.setAttribute("projects", projects);
-        request.getRequestDispatcher("ReadProjects.jsp").forward(request, response);
+        JSONArray jsonArray = new JSONArray();
+
+        for (String[] project : projects) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", project[0]);
+            jsonObject.put("name", project[1]);
+            jsonObject.put("description", project[2]);
+            jsonObject.put("startDate", project[3]);
+            jsonObject.put("endDate", project[4]);
+            jsonObject.put("budget", project[5]);
+            jsonObject.put("image", project[6]);
+            jsonArray.put(jsonObject);
+        }
+
+        PrintWriter out = response.getWriter();
+        out.print(jsonArray.toString());
+        out.flush();
     }
 
     private List<String[]> getAllProjects() {

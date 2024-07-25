@@ -37,7 +37,6 @@ public class UpdateProject extends HttpServlet {
             return;
         }
 
-        // Retrieve image part
         Part imagePart = request.getPart("image");
         InputStream imageStream = imagePart != null ? imagePart.getInputStream() : null;
 
