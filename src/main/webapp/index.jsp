@@ -132,7 +132,7 @@ img {
 
     function sendDeleteRequest() {
         const projectId = document.getElementById('deleteProjectId').value;
-        fetch('DeleteProject', {
+        fetch("project?projectId=" + encodeURIComponent(projectId), {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'text/plain',
@@ -150,7 +150,7 @@ img {
     
     async function loadProjects() {
         try {
-            const response = await fetch('ReadProject');
+            const response = await fetch('project');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -223,7 +223,7 @@ img {
         const form = document.getElementById('createForm');
         const formData = new FormData(form);
 
-        fetch('CreateProject', {
+        fetch('project', {
             method: 'POST',
             body: formData
         })
@@ -242,7 +242,7 @@ img {
         const form = document.getElementById('updateForm');
         const formData = new FormData(form);
 
-        fetch('UpdateProject', {
+        fetch('project', {
             method: 'PUT',
             body: formData
         })
@@ -268,7 +268,7 @@ img {
 
         <div id="create" class="tab-content">
             <h2>Create Project</h2>
-			<form id="createForm" action="CreateProject" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); createProject();">
+			<form id="createForm" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); createProject();">
                 <label for="createProjectName">Project Name</label>
                 <input type="text" id="createProjectName" name="projectName" required>
 
@@ -321,7 +321,7 @@ img {
         
                 <div id="update" class="tab-content">
             <h2>Update Project</h2>
-			<form id="updateForm" action="UpdateProject" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); updateProject();">
+			<form id="updateForm" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); updateProject();">
                 <label for="updateProjectId">Project ID</label>
                 <input type="text" id="updateProjectId" name="projectId" required>
 
