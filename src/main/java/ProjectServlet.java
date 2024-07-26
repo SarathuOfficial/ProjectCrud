@@ -74,6 +74,7 @@ public class ProjectServlet extends HttpServlet {
                 }
                 statement.executeUpdate();
                 response.setContentType("text/plain");
+                response.setStatus(HttpServletResponse.SC_CREATED);
                 response.getWriter().write("Project created successfully");
             }
         } catch (ClassNotFoundException | SQLException e) {
@@ -123,6 +124,7 @@ public class ProjectServlet extends HttpServlet {
                 int rowsUpdated = statement.executeUpdate();
                 if (rowsUpdated > 0) {
                     response.setContentType("text/plain");
+                    response.setStatus(HttpServletResponse.SC_CREATED);
                     response.getWriter().write("Project updated successfully");
                 } else {
                 	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -177,7 +179,6 @@ public class ProjectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
         
         List<String[]> projects = getAllProjects();
         JSONArray jsonArray = new JSONArray();
@@ -201,7 +202,7 @@ public class ProjectServlet extends HttpServlet {
 
     private List<String[]> getAllProjects() {
         List<String[]> projects = new ArrayList<>();
-        String sql = "SELECT projectID, projectName, projectDescription, startDate, endDate, budget, image FROM ProjectDetails";
+        String sql = "SELECT projectID, projectName, projectDescription, startDate, endDate, budget FROM ProjectDetails";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -214,7 +215,7 @@ public class ProjectServlet extends HttpServlet {
                 project[3] = rs.getString("startDate");
                 project[4] = rs.getString("endDate");
                 project[5] = rs.getString("budget");
-                project[6] = rs.getBytes("image") != null ? "image?id=" + project[0] : null;
+                project[6] = "image?id=" + project[0];
                 projects.add(project);
             }
         } catch (SQLException | ClassNotFoundException e) {
