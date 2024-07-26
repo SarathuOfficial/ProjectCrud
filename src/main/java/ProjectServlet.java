@@ -152,6 +152,7 @@ public class ProjectServlet extends HttpServlet {
             boolean deleteSuccess = deleteProjectFromDatabase(projectId);
 
             if (deleteSuccess) {
+            	response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("Project deleted successfully.");
             } else {
